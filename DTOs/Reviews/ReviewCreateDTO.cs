@@ -1,6 +1,9 @@
-public class ReviewCreateDTO
+namespace LapTrinhWeb.DTOs
 {
-    public int ProductId { get; set; }
-    public int Rating { get; set; } // 1–5
-    public string Comment { get; set; }
+    public class ReviewCreateDTO
+    {
+        public int ProductId { get; set; }
+        public int Rating { get; set; } // 1–5
+        public string Comment { get; set; }
+    }
 }

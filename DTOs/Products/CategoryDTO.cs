@@ -1,5 +1,8 @@
-public class CategoryDTO
+namespace LapTrinhWeb.DTOs
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
+    public class CategoryDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }

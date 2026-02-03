@@ -1,6 +1,9 @@
-public class AuthResponseDTO
+namespace LapTrinhWeb.DTOs
 {
-    public int UserId { get; set; }
-    public string FullName { get; set; }
-    public string Token { get; set; }
+    public class AuthResponseDTO
+    {
+        public int UserId { get; set; }
+        public string FullName { get; set; }
+        public string Token { get; set; }
+    }
 }

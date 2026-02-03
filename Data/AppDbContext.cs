@@ -26,7 +26,7 @@ namespace LapTrinhWeb.Data
         public DbSet<ProductReviews> ProductReviews { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<ProductVariants> ProductVariants { get; set; }
-        public DbSet<PromotionCoditions> PromotionConditions { get; set; }
+        public DbSet<PromotionConditions> PromotionConditions { get; set; }
         public DbSet<Promotions> Promotions { get; set; }
         public DbSet<UserAddresses> UserAddresses { get; set; }
         public DbSet<Users> Users { get; set; }

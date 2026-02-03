@@ -1,5 +1,8 @@
-public class OrderStatusHistoryDTO
+namespace LapTrinhWeb.DTOs
 {
-    public string Status { get; set; }
-    public DateTime ChangedAt { get; set; }
+    public class OrderStatusHistoryDTO
+    {
+        public string Status { get; set; }
+        public DateTime ChangedAt { get; set; }
+    }
 }

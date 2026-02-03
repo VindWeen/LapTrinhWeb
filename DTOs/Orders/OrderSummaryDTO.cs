@@ -1,7 +1,10 @@
-public class OrderSummaryDTO
+namespace LapTrinhWeb.DTOs
 {
-    public int OrderId { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public decimal TotalAmount { get; set; }
-    public string Status { get; set; }
+    public class OrderSummaryDTO
+    {
+        public int OrderId { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public decimal TotalAmount { get; set; }
+        public string Status { get; set; }
+    }
 }

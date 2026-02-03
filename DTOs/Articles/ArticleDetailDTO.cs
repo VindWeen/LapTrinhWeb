@@ -1,5 +1,8 @@
-public class ArticleDetailDTO
+namespace LapTrinhWeb.DTOs
 {
-    public string Title { get; set; }
-    public string Content { get; set; }
+    public class ArticleDetailDTO
+    {
+        public string Title { get; set; }
+        public string Content { get; set; }
+    }
 }

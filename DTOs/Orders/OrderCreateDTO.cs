@@ -1,5 +1,8 @@
-public class OrderCreateDTO
+namespace LapTrinhWeb.DTOs
 {
-    public int AddressId { get; set; }
-    public string CouponCode { get; set; }
+    public class OrderCreateDTO
+    {
+        public int AddressId { get; set; }
+        public string CouponCode { get; set; }
+    }
 }

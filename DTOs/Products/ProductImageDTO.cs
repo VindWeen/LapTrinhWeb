@@ -1,5 +1,8 @@
-public class ProductImageDTO
+namespace LapTrinhWeb.DTOs
 {
-    public string ImageUrl { get; set; }
-    public bool IsPrimary { get; set; }
+    public class ProductImageDTO
+    {
+        public string ImageUrl { get; set; }
+        public bool IsPrimary { get; set; }
+    }
 }

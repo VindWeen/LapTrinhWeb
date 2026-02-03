@@ -1,6 +1,9 @@
-public class RegisterRequestDTO
+namespace LapTrinhWeb.DTOs
 {
-    public string FullName { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public class RegisterRequestDTO
+    {
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 }

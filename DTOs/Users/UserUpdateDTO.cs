@@ -1,5 +1,8 @@
-public class UserUpdateDTO
+namespace LapTrinhWeb.DTOs
 {
-    public string FullName { get; set; }
-    public string Phone { get; set; }
+    public class UserUpdateDTO
+    {
+        public string FullName { get; set; }
+        public string Phone { get; set; }
+    }
 }
