@@ -1,6 +1,6 @@
 namespace LapTrinhWeb.Models
 {
-    public class PromotionCoditions
+    public class PromotionConditions
     {
         public int Id { get; set; }
         public int? PromotionId { get; set; }
