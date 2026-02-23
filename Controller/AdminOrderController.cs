@@ -11,11 +11,11 @@ namespace LapTrinhWeb.Controllers
     [ApiController]
     [Route("api/admin/orders")]
     [Authorize(Roles = "Admin")]
-    public class AdminOrdersController : ControllerBase
+    public class AdminOrderController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public AdminOrdersController(AppDbContext context)
+        public AdminOrderController(AppDbContext context)
         {
             _context = context;
         }
