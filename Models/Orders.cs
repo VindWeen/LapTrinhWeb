@@ -13,7 +13,7 @@ namespace LapTrinhWeb.Models
         public decimal DiscountAmount { get; set; }
         public decimal ShippingFee { get; set; }
         public decimal FinalAmount { get; set; }
-        public string CouponCode { get; set; }
+        public string? CouponCode { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
         public int Status { get; set; } //0: Đang xử lý, 1: Đã xử lý, 2: Đang giao hàng, 3: Giao thành công/ thất bại

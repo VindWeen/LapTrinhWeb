@@ -8,6 +8,6 @@ namespace LapTrinhWeb.Models
         public string SnapshotSKU { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
-        public decimal TotalPrice { get; set; } = 0;
+        public decimal Total { get; set; } = 0;
     }
 }
