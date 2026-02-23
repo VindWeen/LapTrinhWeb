@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace LapTrinhWeb.Data
 {
-    public class DBContext : DbContext
+    public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
         public DbSet<ArticleCategories> ArticleCategories { get; set; }
@@ -26,7 +26,7 @@ namespace LapTrinhWeb.Data
         public DbSet<ProductReviews> ProductReviews { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<ProductVariants> ProductVariants { get; set; }
-        public DbSet<PromotionCoditions> PromotionCoditions { get; set; }
+        public DbSet<PromotionConditions> PromotionConditions { get; set; }
         public DbSet<Promotions> Promotions { get; set; }
         public DbSet<UserAddresses> UserAddresses { get; set; }
         public DbSet<Users> Users { get; set; }

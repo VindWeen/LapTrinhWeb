@@ -9,9 +9,9 @@ namespace LapTrinhWeb.Controllers.Admin
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly DBContext _context;
+        private readonly AppDbContext _context;
 
-        public ProductsController(DBContext context)
+        public ProductsController(AppDbContext context)
         {
             _context = context;
         }
@@ -363,7 +363,7 @@ namespace LapTrinhWeb.Controllers.Admin
                 }
 
                 // Kiểm tra xem sản phẩm có trong đơn hàng không
-                var hasOrders = await _context.OrderDetails.AnyAsync(od => od.ProductId == id);
+                var hasOrders = await _context.OrderDetails.AnyAsync(od => od.Id == id);
                 if (hasOrders)
                 {
                     return BadRequest(new
