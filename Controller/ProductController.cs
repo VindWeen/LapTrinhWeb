@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LapTrinhWeb.Data;
 using LapTrinhWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LapTrinhWeb.Controllers.Admin
 {
     [Route("api/admin/products")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class ProductsController : ControllerBase
     {
         private readonly AppDbContext _context;

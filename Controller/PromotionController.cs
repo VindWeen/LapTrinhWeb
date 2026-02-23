@@ -5,16 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using LapTrinhWeb.Data;
 
 namespace LapTrinhWeb.Controllers
 {
     [Route("api/admin/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class PromotionsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public PromotionsController(ApplicationDbContext context)
+        public PromotionsController(AppDbContext context)
         {
             _context = context;
         }
@@ -136,7 +139,7 @@ namespace LapTrinhWeb.Controllers
                     StartDate = request.StartDate,
                     EndDate = request.EndDate,
                     IsActive = request.IsActive ?? true,
-                    Priority = request.Priority ?? false
+                    Priority = request.Priority ?? 0 
                 };
 
                 _context.Promotions.Add(promotion);
@@ -342,7 +345,7 @@ namespace LapTrinhWeb.Controllers
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool? IsActive { get; set; }
-        public bool? Priority { get; set; }
+        public int? Priority { get; set; }
         public List<ConditionDto> Conditions { get; set; }
     }
 
@@ -371,7 +374,7 @@ namespace LapTrinhWeb.Controllers
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public bool IsActive { get; set; }
-        public bool Priority { get; set; }
+        public int Priority { get; set; }
         public int ConditionsCount { get; set; }
         public int CouponsCount { get; set; }
     }
