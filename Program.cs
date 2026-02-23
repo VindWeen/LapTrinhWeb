@@ -33,10 +33,11 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Nhập 'Bearer {token}'"
+        Description = "Nhập token JWT"
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
@@ -58,7 +59,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(key)
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ClockSkew = TimeSpan.Zero
         };
     });
 builder.Services.AddAuthorization();
@@ -67,23 +69,25 @@ var app = builder.Build();
 // Swagger UI
 // if (app.Environment.IsDevelopment())
 // {
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
+// if (app.Environment.IsDevelopment())
+// {
+    
+//     app.UseDeveloperExceptionPage();
+// }
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseDeveloperExceptionPage();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseStaticFiles();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "Images")
-    ),
-    RequestPath = "/Images"
-});
+// app.UseStaticFiles(new StaticFileOptions
+// {
+//     FileProvider = new PhysicalFileProvider(
+//         Path.Combine(Directory.GetCurrentDirectory(), "Images")
+//     ),
+//     RequestPath = "/Images"
+// });
 
 app.MapControllers();
 
