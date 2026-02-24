@@ -42,31 +42,67 @@ namespace LapTrinhWeb.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequestDTO dto)
         {
+            // Tự động validate DTO (nếu dùng [Required] ở DTO)
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Kiểm tra trùng thủ công (vẫn giữ để chắc chắn)
             if (await _db.Users.AnyAsync(u => u.Username == dto.Username))
                 return BadRequest("Username đã tồn tại.");
 
             if (await _db.Users.AnyAsync(u => u.Email == dto.Email))
                 return BadRequest("Email đã tồn tại.");
 
-            var user = new Users
-            {
-                Username = dto.Username,
-                Email = dto.Email,
-                Password = HashPassword(dto.Password),
-                DateOfBirth = dto.DateOfBirth,
-                Role = dto.Role ?? "User",
-                GoogleId = null,
-                IsLocked = false
-            };
+            // Transaction để đảm bảo cả User và Address lưu thành công hoặc rollback
+            using var transaction = await _db.Database.BeginTransactionAsync();
 
-            _db.Users.Add(user);
-            await _db.SaveChangesAsync();
-
-            return Ok(new
+            try
             {
-                Message = "Đăng ký thành công",
-                UserId = user.Id
-            });
+                var user = new Users
+                {
+                    Username = dto.Username,
+                    Email = dto.Email,
+                    Password = HashPassword(dto.Password),
+                    DateOfBirth = dto.DateOfBirth,
+                    Role = dto.Role ?? "Customer",  // Mặc định Customer nếu không gửi
+                    GoogleId = null,
+                    IsLocked = false
+                };
+
+                _db.Users.Add(user);
+                await _db.SaveChangesAsync();  // Lưu để lấy User.Id
+
+                // Tạo địa chỉ mặc định
+                var address = new UserAddresses
+                {
+                    UserId = user.Id,
+                    ContactName = dto.ContactName,
+                    ContactPhone = dto.ContactPhone,
+                    AddressLine = dto.AddressLine,
+                    Province = dto.Province,
+                    District = dto.District,
+                    Ward = dto.Ward,
+                    IsDefault = true
+                };
+
+                _db.UserAddresses.Add(address);
+                await _db.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return Ok(new
+                {
+                    Message = "Đăng ký thành công",
+                    UserId = user.Id
+                });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Lỗi server: {ex.Message}");
+            }
         }
 
         // =============================

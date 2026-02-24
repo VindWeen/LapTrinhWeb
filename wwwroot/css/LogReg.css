@@ -13,6 +13,7 @@ body {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
 }
+
 .container {
   background: #fff;
   border-radius: 10px;
@@ -71,6 +72,40 @@ input {
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  color: #555;
+  border-radius: 5px;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(124, 69, 133, 0.5);
+}
+
+/* Fix màu chữ và icon cho input date */
+input[type="date"] {
+  color: #555;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+  color: #555;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: brightness(0.6);
+}
+
+/* Nhóm 3 input địa chỉ xếp ngang */
+.address-group {
+  display: flex;
+  gap: 15px;
+  margin: 8px 0;
+}
+
+.address-group input {
+  flex: 1;
+  margin: 0;
 }
 
 button {
@@ -89,6 +124,7 @@ button:hover {
   background-color: #3D365C;
 }
 
+/* Overlay */
 .overlay-container {
   position: absolute;
   top: 0;
@@ -100,13 +136,15 @@ button:hover {
   z-index: 100;
 }
 
-.container.right-panel-active .overlay-container{
+.container.right-panel-active .overlay-container {
   transform: translateX(-100%);
 }
 
 .overlay {
-  
   background-image: url(https://raw.githubusercontent.com/NMinMin/Image/refs/heads/main/background.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: #fff;
   position: relative;
   height: 100%;
@@ -156,7 +194,8 @@ button:hover {
   background: transparent;
   border: 1px solid #fff;
 }
-/* Responsive cho tablet và điện thoại */
+
+/* Responsive */
 @media (max-width: 1024px) {
   .container {
     width: 90%;
@@ -169,16 +208,6 @@ button:hover {
 
   .overlay-panel {
     padding: 0 20px;
-  }
-
-  input {
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-
-  button {
-    padding: 10px 30px;
-    font-size: 13px;
   }
 }
 
@@ -201,19 +230,23 @@ button:hover {
   }
 
   .overlay-container {
-    display: none; /* Ẩn phần overlay để tiết kiệm không gian */
+    display: none;
   }
 
   form {
     padding: 40px 20px;
   }
 
-  input {
+  .address-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  input, button {
     font-size: 16px;
   }
 
   button {
-    font-size: 15px;
     width: 100%;
   }
 }
