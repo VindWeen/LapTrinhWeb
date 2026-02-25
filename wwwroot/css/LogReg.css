@@ -250,3 +250,50 @@ button:hover {
     width: 100%;
   }
 }
+
+/* ====================== GOOGLE BUTTON ====================== */
+.google-divider {
+  margin: 20px 0 15px;
+  text-align: center;
+  position: relative;
+  color: #777;
+  font-size: 14px;
+}
+
+.google-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #ddd;
+}
+
+.google-divider span {
+  background: #fff;
+  padding: 0 15px;
+}
+
+.google-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.google-btn-container .g_id_signin {
+  width: 100% !important;
+  max-width: 100%;
+}
+
+/* Style đẹp cho nút Google (tự động từ Google nhưng mình override) */
+.g_id_signin {
+  border-radius: 20px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+  transition: all 0.3s !important;
+}
+
+.g_id_signin:hover {
+  box-shadow: 0 6px 16px rgba(124, 69, 133, 0.3) !important;
+  transform: translateY(-2px);
+}

@@ -134,23 +134,85 @@ namespace LapTrinhWeb.Controllers
                 Token = token
             });
         }
+        // [HttpPost("google-login")]
+        // public async Task<IActionResult> GoogleLogin(GoogleLoginRequestDTO dto)
+        // {
+        //     try
+        //     {
+        //         var payload = await GoogleJsonWebSignature.ValidateAsync(dto.IdToken,
+        //             new GoogleJsonWebSignature.ValidationSettings
+        //             {
+        //                 Audience = new List<string> { _config["GoogleAuth:ClientId"] }
+        //             });
+
+        //         // payload.Email
+        //         // payload.Subject (GoogleId)
+        //         // payload.Name
+
+        //         var user = await _db.Users
+        //             .FirstOrDefaultAsync(u => u.GoogleId == payload.Subject);
+
+        //         // Nếu chưa có tài khoản thì tạo mới
+        //         if (user == null)
+        //         {
+        //             user = new Users
+        //             {
+        //                 Username = payload.Email,
+        //                 Email = payload.Email,
+        //                 GoogleId = payload.Subject,
+        //                 Password = "", // không cần mật khẩu
+        //                 DateOfBirth = DateTime.UtcNow,
+        //                 Role = "User",
+        //                 IsLocked = false
+        //             };
+
+        //             _db.Users.Add(user);
+        //             await _db.SaveChangesAsync();
+        //         }
+
+        //         if (user.IsLocked)
+        //             return Unauthorized("Tài khoản đã bị khóa.");
+
+        //         var token = GenerateJwtToken(user);
+
+        //         return Ok(new AuthResponseDTO
+        //         {
+        //             UserId = user.Id,
+        //             Username = user.Username,
+        //             Role = user.Role,
+        //             Token = token
+        //         });
+        //     }
+        //     catch
+        //     {
+        //         return Unauthorized("Google token không hợp lệ.");
+        //     }
+        // }
+
+
         [HttpPost("google-login")]
         public async Task<IActionResult> GoogleLogin(GoogleLoginRequestDTO dto)
         {
+            Console.WriteLine($"[GoogleLogin] Received idToken (first 50 chars): {(dto?.IdToken?.Length > 50 ? dto.IdToken.Substring(0, 50) : dto.IdToken)}");
+
+            var clientId = _config["GoogleAuth:ClientId"];
+            Console.WriteLine($"[GoogleLogin] Using ClientId from config: {clientId}");
+
+            if (string.IsNullOrEmpty(clientId))
+            {
+                Console.WriteLine("[GoogleLogin] ERROR: GoogleAuth:ClientId is empty or missing!");
+                return Unauthorized("Server config error: Missing Google Client ID");
+            }
+
             try
             {
                 var payload = await GoogleJsonWebSignature.ValidateAsync(dto.IdToken,
                     new GoogleJsonWebSignature.ValidationSettings
                     {
-                        Audience = new List<string>
-                        {
-                    _config["GoogleAuth:ClientId"]
-                        }
+                        Audience = new List<string> { clientId }
                     });
 
-                // payload.Email
-                // payload.Subject (GoogleId)
-                // payload.Name
+                Console.WriteLine($"[GoogleLogin] Success - GoogleId: {payload.Subject}, Email: {payload.Email}");
 
                 var user = await _db.Users
                     .FirstOrDefaultAsync(u => u.GoogleId == payload.Subject);
@@ -165,7 +227,7 @@ namespace LapTrinhWeb.Controllers
                         GoogleId = payload.Subject,
                         Password = "", // không cần mật khẩu
                         DateOfBirth = DateTime.UtcNow,
-                        Role = "User",
+                        Role = "Customer",
                         IsLocked = false
                     };
 
@@ -186,11 +248,81 @@ namespace LapTrinhWeb.Controllers
                     Token = token
                 });
             }
-            catch
+            catch (Exception ex)
             {
-                return Unauthorized("Google token không hợp lệ.");
+                Console.WriteLine($"[GoogleLogin] Verify FAILED: {ex.Message}");
+                Console.WriteLine($"[GoogleLogin] StackTrace: {ex.StackTrace}");
+                return Unauthorized($"Google token không hợp lệ: {ex.Message}");
             }
         }
+        //Refresh token
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken()
+        {
+            // Lấy token cũ từ header Authorization (Bearer token)
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            {
+                return Unauthorized("Token không hợp lệ hoặc thiếu.");
+            }
+
+            var oldToken = authHeader.Substring("Bearer ".Length).Trim();
+
+            try
+            {
+                // Validate token cũ (không cần check expire, chỉ cần signature và claims)
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = false,  // Không check expire để cho phép refresh token cũ
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = _config["Jwt:Issuer"],
+                    ValidAudience = _config["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+
+                // Validate token
+                tokenHandler.ValidateToken(oldToken, validationParameters, out SecurityToken validatedToken);
+                var jwtToken = (JwtSecurityToken)validatedToken;
+
+                // Lấy userId từ claim
+                var userIdClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == "userId");
+                if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+                {
+                    return Unauthorized("Token không chứa userId hợp lệ.");
+                }
+
+                // Tìm user trong DB để lấy thông tin mới nhất (role, locked...)
+                var user = await _db.Users.FindAsync(userId);
+                if (user == null)
+                    return Unauthorized("User không tồn tại.");
+
+                if (user.IsLocked)
+                    return Unauthorized("Tài khoản đã bị khóa.");
+
+                // Tạo token mới (giống GenerateJwtToken)
+                var newToken = GenerateJwtToken(user);
+
+                return Ok(new
+                {
+                    Token = newToken,
+                    Message = "Refresh token thành công"
+                });
+            }
+            catch (SecurityTokenException)
+            {
+                return Unauthorized("Token không hợp lệ hoặc đã bị thay đổi.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Refresh token error: {ex.Message}");
+                return StatusCode(500, "Lỗi server khi refresh token.");
+            }
+        }
+
         // =============================
         // GENERATE JWT
         // =============================

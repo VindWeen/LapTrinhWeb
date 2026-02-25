@@ -1,33 +1,26 @@
-// LogReg.js - Hoàn chỉnh cho trang đăng nhập/đăng ký
-
 // ================= Hiệu ứng trượt Form =================
 const container = document.getElementById('container');
 const signUpButton = document.getElementById('signUp');
 const signInButton = document.getElementById('signIn');
 
-signUpButton.addEventListener('click', () => {
-  container.classList.add("right-panel-active");
-});
-
-signInButton.addEventListener('click', () => {
-  container.classList.remove("right-panel-active");
-});
+signUpButton.addEventListener('click', () => container.classList.add("right-panel-active"));
+signInButton.addEventListener('click', () => container.classList.remove("right-panel-active"));
 
 // ================= ĐĂNG KÝ =================
 document.getElementById('registerForm').addEventListener('submit', async function (e) {
   e.preventDefault();
 
   // Lấy giá trị từ form
-  const username     = document.getElementById('regUsername').value.trim();
-  const password     = document.getElementById('regPassword').value;
-  const fullName     = document.getElementById('regFullName').value.trim();
-  const email        = document.getElementById('regEmail').value.trim();
-  const dateOfBirth  = document.getElementById('regDateOfBirth').value; // yyyy-mm-dd
-  const phone        = document.getElementById('regPhone').value.trim();
-  const addressLine  = document.getElementById('regAddressLine').value.trim();
-  const province     = document.getElementById('regProvince').value.trim();
-  const district     = document.getElementById('regDistrict').value.trim();
-  const ward         = document.getElementById('regWard').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
+  const password = document.getElementById('regPassword').value;
+  const fullName = document.getElementById('regFullName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const dateOfBirth = document.getElementById('regDateOfBirth').value; // yyyy-mm-dd
+  const phone = document.getElementById('regPhone').value.trim();
+  const addressLine = document.getElementById('regAddressLine').value.trim();
+  const province = document.getElementById('regProvince').value.trim();
+  const district = document.getElementById('regDistrict').value.trim();
+  const ward = document.getElementById('regWard').value.trim();
 
   // Validation cơ bản (frontend)
   if (!username || !password || !fullName || !email || !dateOfBirth || !phone || !addressLine || !province || !district || !ward) {
@@ -132,6 +125,62 @@ document.getElementById('loginForm').addEventListener('submit', async function (
   // Reset form sau submit
   document.getElementById('loginForm').reset();
 });
+
+// ================= GOOGLE SIGN IN =================
+function handleGoogleCredentialResponse(response) {
+  const idToken = response.credential;
+
+  fetch('http://localhost:5000/api/auth/google-login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ idToken: idToken })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error("Đăng nhập Google thất bại");
+      return res.json();
+    })
+    .then(data => {
+      alert(`Đăng nhập Google thành công! Xin chào ${data.username}`);
+
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('currentUser', JSON.stringify({
+        userId: data.userId,
+        username: data.username,
+        role: data.role
+      }));
+
+      // Chuyển hướng theo role
+      if (data.role === "Admin") window.location.href = 'admin.html';
+      else if (data.role === "Staff") window.location.href = 'staff.html';
+      else window.location.href = 'index.html';
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Đăng nhập Google thất bại. Vui lòng thử lại!');
+    });
+}
+
+// Khởi tạo Google Identity
+window.onload = function () {
+  google.accounts.id.initialize({
+    client_id: "414528138677-9g2ghc1rg2j6oqenasuhiavruv8qo4vn.apps.googleusercontent.com",   // ← Thay bằng Client ID của bạn
+    callback: handleGoogleCredentialResponse,
+    auto_select: false,
+    cancel_on_tap_outside: true
+  });
+
+  google.accounts.id.renderButton(
+    document.getElementById("googleSignInDiv"),
+    {
+      theme: "filled_blue",
+      size: "large",
+      width: "100%",
+      text: "signin_with",
+      shape: "rectangular",
+      logo_alignment: "center"
+    }
+  );
+};
 
 // Tùy chọn: Nhấn Enter ở input cuối form đăng ký cũng submit
 document.getElementById('regWard').addEventListener('keypress', (e) => {

@@ -1,0 +1,270 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  min-height: 100vh;
+  color: #1e293b;
+  padding: 30px 20px;
+}
+
+.container { max-width: 1000px; margin: 0 auto; }
+
+.title {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 auto 3rem;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@media (max-width: 768px) {
+  .title { font-size: 2.5rem; }
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 28px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.4);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-item label {
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #475569;
+  font-size: 1.05rem;
+}
+
+.required { color: #ef4444; }
+
+.info-item input {
+  padding: 16px 18px;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.info-item input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 5px rgba(99,102,241,0.15);
+  transform: translateY(-2px);
+}
+
+.info-item.full { grid-column: 1 / -1; }
+
+.btn-container {
+  text-align: center;
+}
+
+.btn-save {
+  padding: 18px 50px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 10px 30px rgba(99,102,241,0.4);
+}
+
+.btn-save:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(99,102,241,0.5);
+}
+
+.success-message {
+  margin-top: 24px;
+  padding: 20px;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+  border: 2px solid #86efac;
+}
+
+/* Thanh menu trang bên trái gồm 6 nút */
+.floating-sidebar {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 24px 16px;
+  border-radius: 50px;
+  box-shadow: 0 20px 40px rgba(99,102,241,0.18);
+  border: 1px solid rgba(255,255,255,0.4);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  transition: all 0.4s ease;
+}
+
+.floating-sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+  border-radius: 40px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.floating-sidebar:hover::before {
+  opacity: 0.15;
+}
+
+.sidebar-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  border: 3px solid transparent;
+}
+
+.sidebar-btn svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: #6366f1;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: all 0.3s;
+}
+
+.sidebar-btn:hover {
+  transform: translateY(-8px) scale(1.15);
+  box-shadow: 0 20px 40px rgba(99,102,241,0.3);
+  border-color: #6366f1;
+}
+
+.sidebar-btn:hover svg {
+  stroke: #4f46e5;
+  transform: scale(1.1);
+}
+
+.sidebar-btn.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  transform: scale(1.1);
+  box-shadow: 0 15px 35px rgba(99,102,241,0.4);
+}
+
+.sidebar-btn.active svg {
+  stroke: white;
+}
+
+/* Tooltip */
+.sidebar-btn::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1e293b;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.sidebar-btn::after {
+  content: '';
+  position: absolute;
+  left: 70px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 8px solid transparent;
+  border-right-color: #1e293b;
+  opacity: 0;
+  transition: all 0.3s;
+}
+
+.sidebar-btn:hover::before,
+.sidebar-btn:hover::after {
+  opacity: 1;
+  visibility: visible;
+  left: 76px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ef4444;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(239,68,68,0.4);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Khi đang ở trang hiện tại thì thêm class active */
+.sidebar-btn.active .cart-badge {
+  background: white;
+  color: #6366f1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .floating-sidebar {
+    left: 12px;
+    padding: 20px 12px;
+    gap: 20px;
+  }
+  .sidebar-btn { width: 56px; height: 56px; }
+  .sidebar-btn svg { width: 24px; height: 24px; }
+}
+
+
+.sidebar-btn[data-tooltip="Đơn hàng"] svg {
+  stroke-width: 2.2;
+}
