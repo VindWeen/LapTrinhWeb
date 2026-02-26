@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop Thời Trang Cao Cấp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./css/index.css" />
+</head>
+
+<body>
+
+  <!-- Banner chính đầu trang -->
+  <section class="hero-full">
+    <img src="./Img/banner1.jpg" alt="Banner chính">
+  </section>
+
+  <!-- Sản phẩm 1 + Banner nhỏ xen kẽ -->
+  <section class="highlight-section">
+    <div class="product-highlight alt">
+      <div class="product-image slider">
+        <img src="./Img/AKNu1.jpg" alt="Ảnh 1" class="slide active">
+        <img src="./Img/AKNu2.jpg" alt="Ảnh 2" class="slide">
+        <img src="./Img/AKNu3.jpg" alt="Ảnh 3" class="slide">
+      </div>
+      <div class="product-info">
+        <h2>Áo Khoác Dù Nữ Trượt Nước<br><span>Signal Logo WOP 2087</span></h2>
+        <p class="desc">Chất liệu polyester 135 GSM 3 lớp chống thấm nước hoàn toàn, logo phản quang, túi khóa kéo, form
+          regular mix relax – item phải có cho mùa mưa!</p>
+        <div class="specs">
+          <p>Chất liệu: 100% Polyester | Màu: Đen, Xám, Hồng Dusty Rose</p>
+          <p>Sản xuất tại Việt Nam</p>
+        </div>
+        <div class="price">790.000 ₫</div>
+      </div>
+    </div>
+
+    <!-- Banner xen kẽ 1 -->
+    <div class="interlude-banner">
+      <img src="./Img/banner2.jpg" alt="Banner khuyến mãi 1">
+    </div>
+  </section>
+
+  <!-- Sản phẩm 2 (ngược chiều) -->
+  <section class="highlight-section reverse-bg">
+    <div class="product-highlight reverse">
+      <div class="product-image slider">
+        <img src="./Img/HoodieNam1.jpg" alt="Ảnh 1" class="slide active">
+        <img src="./Img/HoodieNam2.jpg" alt="Ảnh 2" class="slide">
+        <!-- <img src="https://via.placeholder.com/700x1000/4c1d95/ffffff?text=Ảnh+3+Oversize+Tee" alt="Ảnh 3" class="slide"> -->
+      </div>
+      <div class="product-info">
+        <h2>Áo Hoodie Nam<br><span>Double Face Full-Zip Hood MHO 1026</span></h2>
+        <p class="desc">Áo Hoodie Double Face Full-Zip Hood MHO 1026 được làm từ chất liệu thun double face 60% Cotton –
+          40% Polyester, 320gsm, mang lại sự thoải mái nhưng vẫn đứng form.</p>
+        <div class="specs">
+          <p>Chất liệu: Thun Double Face 60% Cotton + 40% Poly 320GSM | Form dáng: Relax - Lai suôn | Màu sắc: Đen, Xám
+            Đậm</p>
+        </div>
+        <div class="price">629.000 ₫</div>
+      </div>
+    </div>
+
+    <!-- Banner xen kẽ 2 -->
+    <div class="interlude-banner">
+      <img src="./Img/banner3.jpg" alt="Banner khuyến mãi 2">
+    </div>
+  </section>
+
+  <!-- Sản phẩm 3 -->
+  <section class="highlight-section">
+    <div class="product-highlight alt">
+      <div class="product-image slider">
+        <img src="./Img/AoThun1.jpg" alt="Ảnh 1" class="slide active">
+        <img src="./Img/AoThun2.jpg" alt="Ảnh 2" class="slide">
+      </div>
+      <div class="product-info">
+        <h2>Áo Thun<br><span>Typo To Be Kind</span></h2>
+        <p class="desc">Áo Thun Typo To Be Kind. Chiếc áo thun sử dụng vải CD 100% cotton, dệt single 2C, định lượng
+          190gsm, áo mang đến cảm giác mềm mại, thoáng mát, thích hợp mặc cả ngày dài trong nhiều hoạt động.</p>
+        <div class="specs">
+          <p>Chất liệu: Thun 100% cotton 190gsm | Form dáng: Relax | Màu sắc: Trắng, Xanh Sky Way</p>
+        </div>
+        <div class="price">299.000 - 329.000 ₫</div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Tự động trượt ảnh mỗi 1 giây khi hover (hoặc luôn chạy)
+    document.querySelectorAll('.slider').forEach(slider => {
+      const slides = slider.querySelectorAll('.slide');
+      let current = 0;
+
+      const startSlide = () => {
+        setInterval(() => {
+          slides[current].classList.remove('active');
+          current = (current + 1) % slides.length;
+          slides[current].classList.add('active');
+        }, 1000); // 1 giây đổi 1 ảnh
+      };
+
+      // Bắt đầu trượt khi hover vào
+      slider.parentElement.addEventListener('mouseenter', () => {
+        if (!slider.interval) {
+          slider.interval = setInterval(() => {
+            slides[current].classList.remove('active');
+            current = (current + 1) % slides.length;
+            slides[current].classList.add('active');
+          }, 1000);
+        }
+      });
+
+      // Dừng và quay về ảnh đầu khi rời chuột
+      slider.parentElement.addEventListener('mouseleave', () => {
+        clearInterval(slider.interval);
+        slider.interval = null;
+        slides.forEach((s, i) => s.classList.toggle('active', i === 0));
+        current = 0;
+      });
+    });
+  </script>
+  <!-- Thanh menu dọc bên trái - 6 nút cho Customer -->
+  <div class="floating-sidebar">
+
+    <!-- 1. Trang chủ -->
+    <a href="index.html" class="sidebar-btn" data-tooltip="Trang chủ">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+    </a>
+
+    <!-- 2. Tài khoản -->
+    <a href="Information.html" class="sidebar-btn" data-tooltip="Tài khoản">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    </a>
+
+    <!-- 3. Sản phẩm -->
+    <a href="Product.html" class="sidebar-btn" data-tooltip="Sản phẩm">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path
+          d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
+      </svg>
+    </a>
+
+    <!-- 4. Giỏ hàng + Badge số lượng -->
+    <a href="Cart.html" class="sidebar-btn" data-tooltip="Giỏ hàng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <circle cx="8" cy="21" r="2" />
+        <circle cx="20" cy="21" r="2" />
+        <path d="M5.5 5h13l-1.5 7H8l-2.5-7z" />
+      </svg>
+      <span class="cart-badge">0</span>
+    </a>
+
+    <!-- 5. Đơn hàng của tôi (MỚI) -->
+    <a href="Orders.html" class="sidebar-btn" data-tooltip="Đơn hàng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+        <path d="M9 14l2 2 4-4" />
+      </svg>
+    </a>
+
+    <!-- 6. Đăng xuất -->
+    <a href="LogReg.html" class="sidebar-btn" data-tooltip="Đăng xuất">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+      </svg>
+    </a>
+  </div>
+
+  <!-- JS cho sidebar (cập nhật active + badge + logout) -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // === ACTIVE TRANG HIỆN TẠI ===
+      const currentPage = window.location.pathname.split("/").pop() || "index.html";
+      document.querySelectorAll('.floating-sidebar a').forEach(link => {
+        const href = link.getAttribute("href");
+        if (href === currentPage || (currentPage === "" && href === "index.html")) {
+          link.classList.add("active");
+        }
+      });
+
+      // === CẬP NHẬT BADGE GIỎ HÀNG ===
+      const badge = document.querySelector('.cart-badge');
+      if (badge) {
+        const userData = localStorage.getItem('currentUser');
+        if (userData) {
+          const user = JSON.parse(userData);
+          if (user.userID) {
+            const cartKey = `cart_${user.userID}`;
+            const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
+            const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalQty;
+            badge.style.display = totalQty > 0 ? 'flex' : 'none';
+          } else {
+            badge.style.display = 'none';
+          }
+        } else {
+          badge.style.display = 'none';
+        }
+      }
+
+      // === ĐĂNG XUẤT ===
+      const logoutBtn = document.querySelector('.floating-sidebar a[href="LogReg.html"]');
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (confirm("Bạn có chắc muốn đăng xuất không?")) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('cart');
+            // Xóa giỏ hàng theo userID (nếu có)
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (user.userID) {
+              localStorage.removeItem(`cart_${user.userID}`);
+            }
+            alert("Đăng xuất thành công! Hẹn gặp lại bạn!");
+            window.location.href = "LogReg.html";
+          }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

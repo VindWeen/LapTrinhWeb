@@ -8,7 +8,6 @@ namespace LapTrinhWeb.Controllers.Admin
 {
     [Route("api/admin/products")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
     public class ProductsController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -20,39 +19,36 @@ namespace LapTrinhWeb.Controllers.Admin
 
         // GET: api/admin/products - Danh sách
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(
-            [FromQuery] int page = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] string search = "",
-            [FromQuery] int? categoryId = null,
-            [FromQuery] bool? isActive = null)
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10,
+    [FromQuery] string search = "",
+    [FromQuery] int? categoryId = null,
+    [FromQuery] bool? isActive = null)
         {
             try
             {
                 var query = _context.Products.AsQueryable();
 
-                // Tìm kiếm theo tên hoặc slug
                 if (!string.IsNullOrEmpty(search))
                 {
                     query = query.Where(p => p.Name.Contains(search) || p.Slug.Contains(search));
                 }
 
-                // Lọc theo danh mục
                 if (categoryId.HasValue)
                 {
                     query = query.Where(p => p.CategoryId == categoryId.Value);
                 }
 
-                // Lọc theo trạng thái
                 if (isActive.HasValue)
                 {
                     query = query.Where(p => p.IsActive == isActive.Value);
                 }
 
-                // Đếm tổng số bản ghi
                 var totalRecords = await query.CountAsync();
 
-                // Phân trang
+                // Lấy danh sách sản phẩm cơ bản
                 var products = await query
                     .OrderByDescending(p => p.Id)
                     .Skip((page - 1) * pageSize)
@@ -72,9 +68,84 @@ namespace LapTrinhWeb.Controllers.Admin
                         ReviewCount = _context.ProductReviews.Count(pr => pr.ProductId == p.Id),
                         AverageRating = _context.ProductReviews
                             .Where(pr => pr.ProductId == p.Id)
-                            .Average(pr => (double?)pr.Rating) ?? 0
+                            .Average(pr => (double?)pr.Rating) ?? 0,
+                        Colors = new List<ColorInfo>(),
+                        SizeRange = ""
                     })
                     .ToListAsync();
+
+                if (!products.Any())
+                    return Ok(new
+                    {
+                        success = true,
+                        data = products,
+                        pagination = new
+                        {
+                            page,
+                            pageSize,
+                            totalRecords,
+                            totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
+                        }
+                    });
+
+                // Lấy tất cả ProductId cần load
+                var productIds = products.Select(p => p.Id).ToList();
+
+                // Load Colors (distinct theo ColorId)
+                var colorData = await _context.ProductVariants
+                    .Where(v => productIds.Contains(v.ProductId.Value) && v.ColorId.HasValue)
+                    .GroupBy(v => new { v.ProductId, v.ColorId })
+                    .Select(g => new
+                    {
+                        ProductId = g.Key.ProductId.Value,
+                        Color = _context.MasterColors
+                            .Where(c => c.Id == g.Key.ColorId.Value)
+                            .Select(c => new ColorInfo
+                            {
+                                HexCode = c.HexCode ?? "#ccc",
+                                Name = c.Name ?? ""
+                            })
+                            .FirstOrDefault()
+                    })
+                    .ToListAsync();
+
+                // Load SizeNames để tính range
+                var sizeData = await _context.ProductVariants
+                    .Where(v => productIds.Contains(v.ProductId.Value) && v.SizeId.HasValue)
+                    .GroupBy(v => new { v.ProductId, v.SizeId })
+                    .Select(g => new
+                    {
+                        ProductId = g.Key.ProductId.Value,
+                        SizeName = _context.MasterSizes
+                            .Where(s => s.Id == g.Key.SizeId.Value)
+                            .Select(s => s.Name)
+                            .FirstOrDefault()
+                    })
+                    .ToListAsync();
+
+                // Gán vào products
+                foreach (var prod in products)
+                {
+                    // Colors
+                    prod.Colors = colorData
+                        .Where(c => c.ProductId == prod.Id && c.Color != null)
+                        .Select(c => c.Color)
+                        .DistinctBy(c => c.HexCode)
+                        .ToList();
+
+                    // SizeRange
+                    var sizes = sizeData
+                        .Where(s => s.ProductId == prod.Id && !string.IsNullOrEmpty(s.SizeName))
+                        .Select(s => s.SizeName)
+                        .Distinct()
+                        .OrderBy(s => s)
+                        .ToList();
+
+                    if (sizes.Any())
+                    {
+                        prod.SizeRange = sizes.First() + " - " + sizes.Last();
+                    }
+                }
 
                 return Ok(new
                 {
@@ -102,6 +173,7 @@ namespace LapTrinhWeb.Controllers.Admin
 
         // GET: api/admin/products/{id} - Chi tiết sản phẩm
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ProductDetailDto>> GetProduct(int id)
         {
             try
@@ -110,11 +182,7 @@ namespace LapTrinhWeb.Controllers.Admin
 
                 if (product == null)
                 {
-                    return NotFound(new
-                    {
-                        success = false,
-                        message = "Không tìm thấy sản phẩm"
-                    });
+                    return NotFound(new { success = false, message = "Không tìm thấy sản phẩm" });
                 }
 
                 var productDetail = new ProductDetailDto
@@ -136,28 +204,54 @@ namespace LapTrinhWeb.Controllers.Admin
                         .ToListAsync(),
                     Promotions = await _context.ProductPromotions
                         .Where(pp => pp.ProductId == id)
-                        .ToListAsync()
+                        .ToListAsync(),
+
+                    // Tính AverageRating
+                    AverageRating = await _context.ProductReviews
+                        .Where(pr => pr.ProductId == id)
+                        .AverageAsync(pr => (double?)pr.Rating) ?? 0
                 };
 
-                return Ok(new
-                {
-                    success = true,
-                    data = productDetail
-                });
+                // Load Colors (distinct theo ColorId)
+                productDetail.Colors = await _context.ProductVariants
+                    .Where(v => v.ProductId == id && v.ColorId.HasValue)
+                    .GroupBy(v => v.ColorId.Value)
+                    .Select(g => new ColorInfo
+                    {
+                        HexCode = _context.MasterColors
+                            .Where(c => c.Id == g.Key)
+                            .Select(c => c.HexCode ?? "#ccc")
+                            .FirstOrDefault(),
+                        Name = _context.MasterColors
+                            .Where(c => c.Id == g.Key)
+                            .Select(c => c.Name ?? "")
+                            .FirstOrDefault()
+                    })
+                    .ToListAsync();
+
+                // Load Sizes (danh sách tên size unique)
+                productDetail.Sizes = await _context.ProductVariants
+                    .Where(v => v.ProductId == id && v.SizeId.HasValue)
+                    .Select(v => _context.MasterSizes
+                        .Where(s => s.Id == v.SizeId.Value)
+                        .Select(s => s.Name)
+                        .FirstOrDefault())
+                    .Where(name => !string.IsNullOrEmpty(name))
+                    .Distinct()
+                    .OrderBy(name => name)
+                    .ToListAsync();
+
+                return Ok(new { success = true, data = productDetail });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    success = false,
-                    message = "Lỗi khi lấy chi tiết sản phẩm",
-                    error = ex.Message
-                });
+                return StatusCode(500, new { success = false, message = "Lỗi khi lấy chi tiết sản phẩm", error = ex.Message });
             }
         }
 
         // POST: api/admin/products - Tạo mới
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Products>> CreateProduct([FromBody] ProductCreateDto productDto)
         {
             try
@@ -237,6 +331,7 @@ namespace LapTrinhWeb.Controllers.Admin
 
         // PUT: api/admin/products/{id} - Cập nhật
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductUpdateDto productDto)
         {
             try
@@ -349,6 +444,7 @@ namespace LapTrinhWeb.Controllers.Admin
 
         // DELETE: api/admin/products/{id} - Xóa
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             try
@@ -431,6 +527,8 @@ namespace LapTrinhWeb.Controllers.Admin
         public int VariantCount { get; set; }
         public int ReviewCount { get; set; }
         public double AverageRating { get; set; }
+        public List<ColorInfo> Colors { get; set; } = new();
+        public string SizeRange { get; set; } = "";
     }
 
     public class ProductDetailDto
@@ -446,6 +544,9 @@ namespace LapTrinhWeb.Controllers.Admin
         public List<ProductImage> Images { get; set; }
         public List<ProductVariants> Variants { get; set; }
         public List<ProductPromotions> Promotions { get; set; }
+        public double AverageRating { get; set; }
+        public List<ColorInfo> Colors { get; set; } = new();
+        public List<string> Sizes { get; set; } = new();
     }
 
     public class ProductCreateDto
@@ -488,4 +589,10 @@ namespace LapTrinhWeb.Controllers.Admin
         public int Quantity { get; set; }
         public decimal PriceModifier { get; set; }
     }
+}
+
+public class ColorInfo
+{
+    public string HexCode { get; set; } = "#ccc";
+    public string Name { get; set; } = "";
 }

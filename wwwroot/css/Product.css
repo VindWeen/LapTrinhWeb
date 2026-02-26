@@ -454,3 +454,66 @@ button:disabled {
 .sidebar-btn[data-tooltip="Đơn hàng"] svg {
   stroke-width: 2.2;
 }
+
+/* ===================== RATING SAO ===================== */
+.rating {
+  display: flex;
+  justify-content: center;
+  margin: 8px 20px 12px;
+  font-size: 1.1rem;
+  color: #d1d5db; /* xám mặc định */
+}
+
+.rating .star {
+  width: 20px;
+  height: 20px;
+  margin: 0 2px;
+  fill: currentColor;
+  transition: fill 0.3s;
+}
+
+.rating .star.filled {
+  fill: #fbbf24; /* vàng sáng */
+}
+
+.rating .star.half {
+  fill: linear-gradient(to right, #fbbf24 50%, #d1d5db 50%);
+}
+
+/* Responsive nhỏ hơn cho mobile */
+@media (max-width: 768px) {
+  .rating .star {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* ===================== COLOR DOTS ===================== */
+.color-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 20px 12px;
+}
+
+.color-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.color-dot:hover {
+  transform: scale(1.2);
+}
+
+/* Size range */
+.size-range {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-left: 8px;
+}
