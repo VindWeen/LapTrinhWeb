@@ -73,7 +73,7 @@ VALUES
 (3, 1, 1, 2),
 (4, 2, 3, 1);
 go
-INSERT INTO Orders (OderCode, UserId, ShippingName, ShippingAdrress, ShippingPhone,
+INSERT INTO Orders (OderCode, UserId, ShippingName, ShippingAddrress, ShippingPhone,
 TotalAmount, DiscountAmount, ShippingFee, FinalAmount,
 PaymentMethod, PaymentStatus, Status)
 VALUES

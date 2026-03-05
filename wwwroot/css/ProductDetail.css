@@ -343,3 +343,30 @@ h2 { font-size: 1.6rem; margin-bottom: 16px; color: #6366f1; }
 .sidebar-btn[data-tooltip="Đơn hàng"] svg {
   stroke-width: 2.2;
 }
+
+.color-dot {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.color-dot.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.size-btn {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.size-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: #eee;
+  border-color: #ccc;
+}
+
+#addToCartBtn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

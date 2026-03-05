@@ -7,5 +7,7 @@ namespace LapTrinhWeb.Models
         public int? ProductId { get; set; }
         public int? ProductVariantId { get; set; }
         public int Quantity { get; set; }
+        public virtual Products Product { get; set; }
+        public virtual ProductVariants ProductVariant { get; set; }
     }
 }

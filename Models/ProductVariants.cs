@@ -9,5 +9,8 @@ namespace LapTrinhWeb.Models
         public string SKU { get; set; }
         public int Quantity { get; set; }
         public decimal PriceModifier{ get; set; }
+        // THÊM 2 DÒNG NÀY
+        public virtual MasterColors Color { get; set; }
+        public virtual MasterSizes Size { get; set; }
     }
 }

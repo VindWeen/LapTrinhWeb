@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sản phẩm</title>
   <link rel="stylesheet" href="./css/Product.css" />
-  <!-- Optional: icon đẹp hơn -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -16,119 +15,122 @@
 
   <div id="product-list" class="product-grid"></div>
 
+  <!-- Phân trang -->
+  <div id="pagination" class="pagination"></div>
+
   <script src="./js/Product.js"></script>
 
-<!-- Thanh menu dọc bên trái - 6 nút cho Customer -->
-<div class="floating-sidebar">
+  <!-- Thanh menu dọc bên trái - 6 nút cho Customer -->
+  <div class="floating-sidebar">
+    <!-- 1. Trang chủ -->
+    <a href="index.html" class="sidebar-btn" data-tooltip="Trang chủ">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+    </a>
 
-  <!-- 1. Trang chủ -->
-  <a href="index.html" class="sidebar-btn" data-tooltip="Trang chủ">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  </a>
+    <!-- 2. Tài khoản -->
+    <a href="Information.html" class="sidebar-btn" data-tooltip="Tài khoản">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+    </a>
 
-  <!-- 2. Tài khoản -->
-  <a href="Information.html" class="sidebar-btn" data-tooltip="Tài khoản">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  </a>
+    <!-- 3. Sản phẩm -->
+    <a href="Product.html" class="sidebar-btn" data-tooltip="Sản phẩm">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path
+          d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
+      </svg>
+    </a>
 
-  <!-- 3. Sản phẩm -->
-  <a href="Product.html" class="sidebar-btn" data-tooltip="Sản phẩm">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
-    </svg>
-  </a>
+    <!-- 4. Giỏ hàng + Badge -->
+    <a href="Cart.html" class="sidebar-btn" data-tooltip="Giỏ hàng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <circle cx="8" cy="21" r="2" />
+        <circle cx="20" cy="21" r="2" />
+        <path d="M5.5 5h13l-1.5 7H8l-2.5-7z" />
+      </svg>
+      <span class="cart-badge">0</span>
+    </a>
 
-  <!-- 4. Giỏ hàng + Badge số lượng -->
-  <a href="Cart.html" class="sidebar-btn" data-tooltip="Giỏ hàng">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="8" cy="21" r="2" />
-      <circle cx="20" cy="21" r="2" />
-      <path d="M5.5 5h13l-1.5 7H8l-2.5-7z" />
-    </svg>
-    <span class="cart-badge">0</span>
-  </a>
+    <!-- 5. Đơn hàng -->
+    <a href="Orders.html" class="sidebar-btn" data-tooltip="Đơn hàng">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+        <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+        <path d="M9 14l2 2 4-4" />
+      </svg>
+    </a>
 
-  <!-- 5. Đơn hàng của tôi (MỚI) -->
-  <a href="Orders.html" class="sidebar-btn" data-tooltip="Đơn hàng">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-      <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-      <path d="M9 14l2 2 4-4" />
-    </svg>
-  </a>
+    <!-- 6. Đăng xuất -->
+    <a href="LogReg.html" class="sidebar-btn" data-tooltip="Đăng xuất">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <polyline points="16 17 21 12 16 7" />
+        <line x1="21" y1="12" x2="9" y2="12" />
+      </svg>
+    </a>
+  </div>
 
-  <!-- 6. Đăng xuất -->
-  <a href="LogReg.html" class="sidebar-btn" data-tooltip="Đăng xuất">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16 17 21 12 16 7" />
-      <line x1="21" y1="12" x2="9" y2="12" />
-    </svg>
-  </a>
-</div>
+  <!-- JS cho sidebar -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const currentPage = window.location.pathname.split("/").pop() || "index.html";
+      document.querySelectorAll('.floating-sidebar a').forEach(link => {
+        const href = link.getAttribute("href");
+        if (href === currentPage || (currentPage === "" && href === "index.html")) {
+          link.classList.add("active");
+        }
+      });
 
-<!-- JS cho sidebar (cập nhật active + badge + logout) -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // === ACTIVE TRANG HIỆN TẠI ===
-    const currentPage = window.location.pathname.split("/").pop() || "index.html";
-    document.querySelectorAll('.floating-sidebar a').forEach(link => {
-      const href = link.getAttribute("href");
-      if (href === currentPage || (currentPage === "" && href === "index.html")) {
-        link.classList.add("active");
-      }
-    });
-
-    // === CẬP NHẬT BADGE GIỎ HÀNG ===
-    const badge = document.querySelector('.cart-badge');
-    if (badge) {
-      const userData = localStorage.getItem('currentUser');
-      if (userData) {
-        const user = JSON.parse(userData);
-        if (user.userID) {
-          const cartKey = `cart_${user.userID}`;
-          const cart = JSON.parse(localStorage.getItem(cartKey) || '[]');
-          const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
-          badge.textContent = totalQty;
-          badge.style.display = totalQty > 0 ? 'flex' : 'none';
+      // Badge giỏ hàng (giữ nguyên)
+      const badge = document.querySelector('.cart-badge');
+      if (badge) {
+        const token = localStorage.getItem('token');
+        if (token) {
+          fetch('http://localhost:5000/api/cart', {
+            headers: { 'Authorization': `Bearer ${token}` }
+          })
+            .then(res => res.json())
+            .then(result => {
+              if (result.success) {
+                const total = result.data.reduce((sum, item) => sum + item.quantity, 0);
+                badge.textContent = total;
+                badge.style.display = total > 0 ? 'flex' : 'none';
+              }
+            })
+            .catch(() => badge.style.display = 'none');
         } else {
           badge.style.display = 'none';
         }
-      } else {
-        badge.style.display = 'none';
       }
-    }
 
-    // === ĐĂNG XUẤT ===
-    const logoutBtn = document.querySelector('.floating-sidebar a[href="LogReg.html"]');
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        if (confirm("Bạn có chắc muốn đăng xuất không?")) {
-          localStorage.removeItem('token');
-          localStorage.removeItem('currentUser');
-          localStorage.removeItem('cart');
-          // Xóa giỏ hàng theo userID (nếu có)
-          const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-          if (user.userID) {
-            localStorage.removeItem(`cart_${user.userID}`);
+      // Đăng xuất
+      const logoutBtn = document.querySelector('.floating-sidebar a[href="LogReg.html"]');
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (confirm("Bạn có chắc muốn đăng xuất không?")) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentUser');
+            alert("Đăng xuất thành công!");
+            window.location.href = "LogReg.html";
           }
-          alert("Đăng xuất thành công! Hẹn gặp lại bạn!");
-          window.location.href = "LogReg.html";
-        }
-      });
-    }
-  });
-</script>
+        });
+      }
+    });
+  </script>
 
-  <!-- Popup Mô tả chi tiết sản phẩm -->
+  <!-- Popup mô tả -->
   <div id="descModal" class="desc-modal">
     <div class="desc-modal-content">
       <div class="desc-modal-header">
